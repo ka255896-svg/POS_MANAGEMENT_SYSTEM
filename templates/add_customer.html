@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Add Customer</h2>
+
+<div class="card shadow p-4">
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label>Full Name</label>
+        <input type="text" name="full_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Phone</label>
+        <input type="text" name="phone" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Address</label>
+        <textarea name="address" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success">
+        Save Customer
+    </button>
+
+    <a href="{% url 'customer_list' %}" class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
+
+</div>
+
+{% endblock %}

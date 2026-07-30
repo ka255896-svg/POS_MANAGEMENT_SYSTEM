@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Sales</h2>
+
+<div class="card shadow p-4">
+
+<form method="POST">
+
+    {% csrf_token %}
+    <div class="mb-3">
+
+    <label>Customer</label>
+
+    <select name="customer" class="form-control" required>
+
+        <option value="">-- Select Customer --</option>
+
+        {% for customer in customers %}
+
+            <option value="{{ customer.id }}">
+                {{ customer.full_name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+    <div class="mb-3">
+
+        <label class="form-label">Product</label>
+
+        <select name="product" class="form-control" required>
+
+            {% for product in products %}
+
+            <option value="{{ product.id }}">
+                {{ product.product_name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label class="form-label">Quantity</label>
+
+        <input
+            type="number"
+            name="quantity"
+            class="form-control"
+            required>
+
+    </div>
+
+    {% if error %}
+
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+    <button type="submit" class="btn btn-success">
+        Sell
+    </button>
+
+</form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Sales History</h2>
+<form method="GET" class="mb-3">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            class="form-control"
+            placeholder="Search customer or product...">
+
+        <button class="btn btn-primary">
+            Search
+        </button>
+
+    </div>
+
+</form>
+
+<table class="table table-bordered table-striped">
+
+    <thead class="table-dark">
+
+ <tr>
+    <th>Date</th>
+    <th>Customer</th>
+    <th>Product</th>
+    <th>Quantity</th>
+    <th>Total Price</th>
+    <th>Receipt</th>
+</tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for sale in sales %}
+
+        <tr>
+
+            <td>{{ sale.customer.full_name }}</td>
+
+            <td>{{ sale.product.product_name }}</td>
+
+            <td>{{ sale.quantity }}</td>
+
+            <td>UGX {{ sale.total_price }}</td>
+
+            <td>
+                <a href="{% url 'receipt' sale.id %}"
+                   class="btn btn-primary btn-sm">
+                    View Receipt
+                </a>
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

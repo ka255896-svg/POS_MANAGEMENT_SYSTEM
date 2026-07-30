@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Customers</h2>
+
+<a href="{% url 'add_customer' %}" class="btn btn-primary mb-3">
+    Add Customer
+</a>
+<form method="GET" class="mb-3">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            class="form-control"
+            placeholder="Search customer...">
+
+        <button class="btn btn-primary">
+            Search
+        </button>
+
+    </div>
+
+</form>
+
+<table class="table table-bordered table-striped">
+
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th width="170">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for customer in customers %}
+
+        <tr>
+
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.full_name }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.address }}</td>
+
+            <td>
+
+                <a href="{% url 'edit_customer' customer.id %}"
+                   class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="{% url 'delete_customer' customer.id %}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Delete this customer?')">
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

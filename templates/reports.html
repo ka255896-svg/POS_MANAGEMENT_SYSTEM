@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Reports Dashboard</h2>
+
+<!-- Date Filter -->
+
+<div class="card shadow mb-4">
+
+    <div class="card-body">
+
+        <form method="GET" class="row g-3">
+
+            <div class="col-md-4">
+
+                <label>From Date</label>
+
+                <input
+                    type="date"
+                    name="from_date"
+                    value="{{ from_date }}"
+                    class="form-control">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>To Date</label>
+
+                <input
+                    type="date"
+                    name="to_date"
+                    value="{{ to_date }}"
+                    class="form-control">
+
+            </div>
+
+            <div class="col-md-4 d-flex align-items-end">
+
+                <button class="btn btn-primary me-2">
+                    Filter
+                </button>
+
+                <a href="{% url 'reports' %}" class="btn btn-secondary">
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Statistics -->
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        <div class="card bg-primary text-white mb-3">
+
+            <div class="card-body text-center">
+
+                <h5>Total Products</h5>
+
+                <h2>{{ total_products }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card bg-success text-white mb-3">
+
+            <div class="card-body text-center">
+
+                <h5>Total Customers</h5>
+
+                <h2>{{ total_customers }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card bg-warning text-dark mb-3">
+
+            <div class="card-body text-center">
+
+                <h5>Total Sales</h5>
+
+                <h2>{{ total_sales }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card bg-danger text-white mb-3">
+
+            <div class="card-body text-center">
+
+                <h5>Total Revenue</h5>
+
+                <h2>UGX {{ total_revenue }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Download Buttons -->
+
+<div class="mb-4">
+
+  <a href="{% url 'sales_pdf' %}{% if from_date %}?from_date={{ from_date }}&to_date={{ to_date }}{% endif %}"
+      class="btn btn-danger">
+       📄 Download PDF
+  </a>
+
+  <a href="{% url 'sales_excel' %}{% if from_date %}?from_date={{ from_date }}&to_date={{ to_date }}{% endif %}"
+      class="btn btn-success">
+       📊 Download Excel
+  </a>
+</div>
+
+
+<!-- Sales Report -->
+
+<div class="card shadow mb-4">
+
+    <div class="card-header bg-dark text-white">
+
+        Sales Report
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Receipt</th>
+
+                    <th>Customer</th>
+
+                    <th>Product</th>
+
+                    <th>Quantity</th>
+
+                    <th>Total</th>
+
+                    <th>Date</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for sale in sales %}
+
+                <tr>
+
+                    <td>{{ sale.id }}</td>
+
+                    <td>
+                        {% if sale.customer %}
+                            {{ sale.customer.full_name }}
+                        {% else %}
+                            Walk-in Customer
+                        {% endif %}
+                    </td>
+
+                    <td>{{ sale.product.product_name }}</td>
+
+                    <td>{{ sale.quantity }}</td>
+
+                    <td>UGX {{ sale.total_price }}</td>
+
+                    <td>{{ sale.sale_date|date:"d/m/Y H:i" }}</td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="6" class="text-center">
+
+                        No sales found.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- Low Stock -->
+
+<div class="card shadow">
+
+    <div class="card-header bg-warning">
+
+        ⚠ Low Stock Products
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered">
+
+            <thead>
+
+                <tr>
+
+                    <th>Product</th>
+
+                    <th>Remaining Quantity</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for product in low_stock %}
+
+                <tr>
+
+                    <td>{{ product.product_name }}</td>
+
+                    <td>{{ product.quantity }}</td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="2" class="text-center">
+
+                        No low stock products.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

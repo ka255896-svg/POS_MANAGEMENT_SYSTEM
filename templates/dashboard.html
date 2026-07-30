@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Dashboard</h2>
+
+
+<!-- Statistics Cards -->
+
+<div class="row">
+
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-primary text-white shadow">
+
+            <div class="card-body text-center">
+
+                <h5>📦 Products</h5>
+
+                <h2>{{ total_products }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-success text-white shadow">
+
+            <div class="card-body text-center">
+
+                <h5>👥 Customers</h5>
+
+                <h2>{{ total_customers }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-warning text-dark shadow">
+
+            <div class="card-body text-center">
+
+                <h5>🛒 Sales</h5>
+
+                <h2>{{ total_sales }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-danger text-white shadow">
+
+            <div class="card-body text-center">
+
+                <h5>💰 Revenue</h5>
+
+                <h2>UGX {{ total_revenue }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+
+<!-- Low Stock and Welcome -->
+
+<div class="row mt-3">
+
+
+    <div class="col-md-6">
+
+
+        <div class="card shadow">
+
+
+            <div class="card-header bg-dark text-white">
+
+                ⚠ Low Stock Alert
+
+            </div>
+
+
+
+            <div class="card-body">
+
+
+                <h3 class="text-danger">
+
+                    {{ low_stock }} Product(s)
+
+                </h3>
+
+
+                <p>
+
+                    Products with less than 5 items remaining.
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div class="col-md-6">
+
+
+        <div class="card shadow">
+
+
+            <div class="card-header bg-info text-white">
+
+                Welcome
+
+            </div>
+
+
+            <div class="card-body">
+
+
+                <h4>
+                    Welcome to POS Management System
+                </h4>
+
+
+                <p>
+
+                    Manage products, customers,
+                    sales and reports easily.
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+<!-- Charts -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<div class="row mt-4">
+
+
+    <div class="col-md-6">
+
+        <div class="card shadow p-3">
+
+            <h4>
+                📈 Sales Trend
+            </h4>
+
+            <canvas id="salesChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-md-6">
+
+        <div class="card shadow p-3">
+
+            <h4>
+                🏆 Best Selling Products
+            </h4>
+
+            <canvas id="productChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+const salesLabels = {{ sales_dates|safe }};
+
+const salesValues = {{ sales_totals|safe }};
+
+
+new Chart(
+    document.getElementById('salesChart'),
+    {
+        type: 'line',
+
+        data: {
+
+            labels: salesLabels,
+
+            datasets: [{
+                label: 'Sales Amount',
+
+                data: salesValues,
+
+                borderWidth: 2
+
+            }]
+        }
+    }
+);
+
+
+
+const productLabels = {{ product_names|safe }};
+
+const productValues = {{ product_quantities|safe }};
+
+
+
+new Chart(
+    document.getElementById('productChart'),
+
+    {
+        type: 'bar',
+
+        data: {
+
+            labels: productLabels,
+
+            datasets: [{
+
+                label: 'Quantity Sold',
+
+                data: productValues,
+
+                borderWidth: 2
+
+            }]
+
+        }
+
+    }
+
+);
+
+
+</script>
+
+{% endblock %}
