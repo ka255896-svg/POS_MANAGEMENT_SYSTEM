@@ -87,7 +87,68 @@
 
 </div>
 
+<!-- Today's Statistics -->
 
+<div class="row mt-3">
+
+
+<div class="col-md-3 mb-3">
+
+<div class="card bg-info text-white shadow">
+
+<div class="card-body text-center">
+
+<h5>📅 Today's Sales</h5>
+
+<h3>
+UGX {{ today_revenue }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3 mb-3">
+
+<div class="card bg-dark text-white shadow">
+
+<div class="card-body text-center">
+
+<h5>📈 Today's Profit</h5>
+
+<h3>
+UGX {{ today_profit }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-3 mb-3">
+
+<div class="card bg-danger text-white shadow">
+
+<div class="card-body text-center">
+
+<h5>⚠ Low Stock</h5>
+
+<h3>
+{{ low_stock }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
 
 <!-- Low Stock and Welcome -->
 
@@ -217,7 +278,140 @@
 
 </div>
 
+<!-- Recent Transactions -->
 
+<div class="card shadow mt-4">
+
+
+<div class="card-header bg-dark text-white">
+
+Recent Transactions
+
+</div>
+
+
+<div class="card-body table-responsive">
+
+
+<table class="table table-bordered table-striped">
+
+
+<thead class="table-dark">
+
+<tr>
+
+<th>Receipt</th>
+
+<th>Customer</th>
+
+<th>Product</th>
+
+<th>Quantity</th>
+
+<th>Total</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for sale in recent_sales %}
+
+
+<tr>
+
+
+<td>
+#{{ sale.id }}
+</td>
+
+
+
+<td>
+
+{% if sale.customer %}
+
+{{ sale.customer.full_name }}
+
+{% else %}
+
+Walk-in Customer
+
+{% endif %}
+
+
+</td>
+
+
+
+<td>
+
+{{ sale.product.product_name }}
+
+</td>
+
+
+
+<td>
+
+{{ sale.quantity }}
+
+</td>
+
+
+
+<td>
+
+UGX {{ sale.total_price }}
+
+</td>
+
+
+
+<td>
+
+{{ sale.sale_date|date:"d/m/Y H:i" }}
+
+</td>
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+<tr>
+
+<td colspan="6" class="text-center">
+
+No recent sales
+
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
 
 <script>
 

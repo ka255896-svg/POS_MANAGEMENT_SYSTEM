@@ -23,9 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=z9l#t63-vs1t8knoti9#&jmmrt!^=gfeods2p1&**qk1=e6+x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 # Application definition
 
@@ -83,7 +86,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "pos_management_system",
         "USER": "root",
-        "PASSWORD": os.getenv("MYSQL_PASSWORD"),
+        "PASSWORD":"1234",
         "HOST": "127.0.0.1",
         "PORT": "3306",
     }
@@ -118,7 +121,7 @@ TIME_ZONE = 'Africa/Kampala'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

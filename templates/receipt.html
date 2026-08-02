@@ -1,62 +1,339 @@
 {% extends "base.html" %}
 
-{% load tz %}
 
 {% block content %}
 
-<div class="card p-4 shadow" style="max-width:600px; margin:auto;">
 
-    <h2 class="text-center">POS MANAGEMENT SYSTEM</h2>
+<div class="container mt-4">
 
-    <hr>
 
-    <p><strong>Receipt No:</strong> {{ sale.id }}</p>
-    <p><strong>Customer:</strong> {{ sale.customer.full_name }}</p>
-    <p><strong>Date:</strong> {{ sale.sale_date|localtime|date:"d/m/Y H:i:s" }}</p>
+<div class="card shadow mx-auto receipt-card">
 
-    <table class="table table-bordered">
 
-        <thead class="table-dark">
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Total</th>
-            </tr>
-        </thead>
+<div class="card-body">
 
-        <tbody>
 
-            <tr>
-                <td>{{ sale.product.product_name }}</td>
-                <td>{{ sale.quantity }}</td>
-                <td>UGX {{ sale.total_price }}</td>
-            </tr>
+<div class="receipt-header text-center">
 
-        </tbody>
 
-    </table>
+<h2>
+POS MANAGEMENT SYSTEM
+</h2>
 
-    <h4 class="text-end">
-        Total: UGX {{ sale.total_price }}
-    </h4>
+<p>
+Sales Receipt
+</p>
 
-    <hr>
 
-    <p class="text-center">
-        <strong>Thank you for shopping!</strong>
-    </p>
+<p>
+Tel: +256 700 000000
+<br>
+Email: info@possystem.com
+</p>
 
-    <div class="text-center">
 
-        <button onclick="window.print()"
-                class="btn btn-success">
+<hr>
 
-            Print Receipt
-
-        </button>
-
-    </div>
 
 </div>
+
+
+
+
+<div class="row">
+
+
+<div class="col-6">
+
+<strong>
+Receipt No:
+</strong>
+
+{{ sale.id }}
+
+</div>
+
+
+
+<div class="col-6 text-end">
+
+<strong>
+Date:
+</strong>
+
+{{ sale.sale_date|date:"d/m/Y H:i" }}
+
+</div>
+
+
+</div>
+
+
+
+<hr>
+
+
+
+
+<h5>
+Customer Information
+</h5>
+
+
+<table class="table table-sm">
+
+
+<tr>
+
+<td>
+Customer
+</td>
+
+<td>
+
+
+{% if sale.customer %}
+
+{{ sale.customer.full_name }}
+
+{% else %}
+
+Walk-in Customer
+
+{% endif %}
+
+
+</td>
+
+
+</tr>
+
+
+
+</table>
+
+
+
+
+<hr>
+
+
+
+
+<h5>
+Product Details
+</h5>
+
+
+<table class="table table-bordered">
+
+
+<thead class="table-dark">
+
+
+<tr>
+
+<th>
+Item
+</th>
+
+<th>
+Qty
+</th>
+
+<th>
+Price
+</th>
+
+<th>
+Total
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody>
+
+
+<tr>
+
+
+<td>
+{{ sale.product.product_name }}
+</td>
+
+
+<td>
+{{ sale.quantity }}
+</td>
+
+
+<td>
+UGX {{ sale.product.price }}
+</td>
+
+
+<td>
+UGX {{ sale.total_price }}
+</td>
+
+
+</tr>
+
+
+</tbody>
+
+
+</table>
+
+
+
+
+<hr>
+
+
+
+
+<div class="text-end">
+
+
+<h4>
+
+Total:
+
+UGX {{ sale.total_price }}
+
+</h4>
+
+
+</div>
+
+
+
+
+<hr>
+
+
+
+
+<div class="text-center">
+
+
+<h5>
+Thank You For Shopping With Us
+</h5>
+
+
+<p>
+Please Come Again
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="text-center mt-4 no-print">
+
+
+<button onclick="window.print()"
+class="btn btn-primary">
+
+🖨 Print Receipt
+
+</button>
+
+
+
+<a href="{% url 'sales_page' %}"
+class="btn btn-success">
+
+➕ New Sale
+
+</a>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+{% block extra_css %}
+
+<style>
+
+
+.receipt-card{
+
+max-width:650px;
+
+}
+
+
+
+.receipt-header h2{
+
+font-weight:bold;
+
+}
+
+
+
+@media print{
+
+
+.no-print{
+
+display:none;
+
+}
+
+
+.card{
+
+box-shadow:none;
+
+border:none;
+
+}
+
+
+body{
+
+background:white;
+
+}
+
+
+}
+
+
+
+</style>
+
 
 {% endblock %}

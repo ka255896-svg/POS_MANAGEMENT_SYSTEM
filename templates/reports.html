@@ -1,291 +1,800 @@
 {% extends "base.html" %}
 
+
 {% block content %}
 
-<h2 class="mb-4">Reports Dashboard</h2>
+<div class="container-fluid">
 
-<!-- Date Filter -->
+    <h2 class="mb-4">
+        Reports Dashboard
+    </h2>
 
-<div class="card shadow mb-4">
 
-    <div class="card-body">
+    <!-- DATE FILTER -->
 
-        <form method="GET" class="row g-3">
+    <div class="card shadow mb-4">
 
-            <div class="col-md-4">
+        <div class="card-body">
 
-                <label>From Date</label>
+            <form method="GET" class="row g-3">
 
-                <input
+
+                <div class="col-md-4">
+
+                    <label>From Date</label>
+
+                    <input 
                     type="date"
                     name="from_date"
                     value="{{ from_date }}"
                     class="form-control">
 
-            </div>
+                </div>
 
-            <div class="col-md-4">
 
-                <label>To Date</label>
 
-                <input
+                <div class="col-md-4">
+
+                    <label>To Date</label>
+
+                    <input 
                     type="date"
                     name="to_date"
                     value="{{ to_date }}"
                     class="form-control">
 
-            </div>
-
-            <div class="col-md-4 d-flex align-items-end">
-
-                <button class="btn btn-primary me-2">
-                    Filter
-                </button>
-
-                <a href="{% url 'reports' %}" class="btn btn-secondary">
-                    Reset
-                </a>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
+                </div>
 
 
-<!-- Statistics -->
 
-<div class="row">
+                <div class="col-md-4 d-flex align-items-end">
 
-    <div class="col-md-3">
 
-        <div class="card bg-primary text-white mb-3">
+                    <button class="btn btn-primary me-2">
+                        Filter
+                    </button>
 
-            <div class="card-body text-center">
 
-                <h5>Total Products</h5>
+                    <a href="{% url 'reports' %}" 
+                    class="btn btn-secondary">
 
-                <h2>{{ total_products }}</h2>
+                        Reset
 
-            </div>
+                    </a>
+
+
+                </div>
+
+
+            </form>
+
 
         </div>
 
     </div>
 
 
-    <div class="col-md-3">
-
-        <div class="card bg-success text-white mb-3">
-
-            <div class="card-body text-center">
-
-                <h5>Total Customers</h5>
-
-                <h2>{{ total_customers }}</h2>
-
-            </div>
-
-        </div>
-
-    </div>
 
 
-    <div class="col-md-3">
+    <!-- STATISTICS CARDS -->
 
-        <div class="card bg-warning text-dark mb-3">
 
-            <div class="card-body text-center">
+    <div class="row">
 
-                <h5>Total Sales</h5>
 
-                <h2>{{ total_sales }}</h2>
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-primary text-white shadow">
+
+                <div class="card-body text-center">
+
+                    <h5>
+                        Total Products
+                    </h5>
+
+                    <h2>
+                        {{ total_products }}
+                    </h2>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
 
 
-    <div class="col-md-3">
+        <div class="col-lg-3 col-md-6 mb-3">
 
-        <div class="card bg-danger text-white mb-3">
+            <div class="card bg-success text-white shadow">
 
-            <div class="card-body text-center">
+                <div class="card-body text-center">
 
-                <h5>Total Revenue</h5>
+                    <h5>
+                        Total Customers
+                    </h5>
 
-                <h2>UGX {{ total_revenue }}</h2>
+                    <h2>
+                        {{ total_customers }}
+                    </h2>
+
+                </div>
 
             </div>
 
         </div>
 
+
+
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-warning shadow">
+
+                <div class="card-body text-center">
+
+                    <h5>
+                        Total Sales
+                    </h5>
+
+                    <h2>
+                        {{ total_sales }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-danger text-white shadow">
+
+                <div class="card-body text-center">
+
+                    <h5>
+                        Total Revenue
+                    </h5>
+
+                    <h2>
+                        UGX {{ total_revenue }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-info text-white shadow">
+
+                <div class="card-body text-center">
+
+                    <h5>
+                        Total Profit
+                    </h5>
+
+                    <h2>
+                        UGX {{ total_profit }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
     </div>
 
-</div>
 
 
-<!-- Download Buttons -->
-
-<div class="mb-4">
-
-  <a href="{% url 'sales_pdf' %}{% if from_date %}?from_date={{ from_date }}&to_date={{ to_date }}{% endif %}"
-      class="btn btn-danger">
-       📄 Download PDF
-  </a>
-
-  <a href="{% url 'sales_excel' %}{% if from_date %}?from_date={{ from_date }}&to_date={{ to_date }}{% endif %}"
-      class="btn btn-success">
-       📊 Download Excel
-  </a>
-</div>
 
 
-<!-- Sales Report -->
+    <!-- CHARTS -->
 
-<div class="card shadow mb-4">
 
-    <div class="card-header bg-dark text-white">
+    <div class="row">
 
-        Sales Report
+
+        <!-- BAR CHART -->
+
+        <div class="col-lg-12 mb-4">
+
+
+            <div class="card shadow">
+
+
+                <div class="card-header bg-primary text-white">
+
+                    Sales By Product
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <div style="height:280px;">
+
+                        <canvas id="salesChart"></canvas>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+        <!-- MONTHLY CHART -->
+
+
+        <div class="col-lg-6 mb-4">
+
+
+            <div class="card shadow">
+
+
+                <div class="card-header bg-success text-white">
+
+                    Monthly Revenue
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <div style="height:250px;">
+
+                        <canvas id="monthlyChart"></canvas>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+        <!-- PIE CHART -->
+
+
+        <div class="col-lg-6 mb-4">
+
+
+            <div class="card shadow">
+
+
+                <div class="card-header bg-warning">
+
+                    Sales Distribution
+
+                </div>
+
+
+
+                <div class="card-body text-center">
+
+
+                    <div style="
+                    width:260px;
+                    height:260px;
+                    margin:auto;">
+
+
+                        <canvas id="pieChart"></canvas>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
 
     </div>
 
-    <div class="card-body">
 
-        <table class="table table-bordered table-striped">
 
-            <thead class="table-dark">
+
+
+
+    <!-- DOWNLOAD -->
+
+
+    <div class="mb-4">
+
+
+        <a href="{% url 'sales_pdf' %}"
+        class="btn btn-danger">
+
+            📄 Download PDF
+
+        </a>
+
+
+
+        <a href="{% url 'sales_excel' %}"
+        class="btn btn-success">
+
+            📊 Download Excel
+
+        </a>
+
+
+    </div>
+
+
+
+
+
+    <!-- SALES TABLE -->
+
+
+    <div class="card shadow mb-4">
+
+
+        <div class="card-header bg-dark text-white">
+
+            Sales Report
+
+        </div>
+
+
+
+        <div class="card-body table-responsive">
+
+
+            <table class="table table-bordered table-striped">
+
+
+                <thead class="table-dark">
+
+
+                    <tr>
+
+                        <th>
+                            Receipt
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                {% for sale in sales %}
+
+
+                    <tr>
+
+
+                        <td>
+                            {{ sale.id }}
+                        </td>
+
+
+
+                        <td>
+
+                        {% if sale.customer %}
+
+                            {{ sale.customer.full_name }}
+
+                        {% else %}
+
+                            Walk-in Customer
+
+                        {% endif %}
+
+                        </td>
+
+
+
+                        <td>
+                            {{ sale.product.product_name }}
+                        </td>
+
+
+                        <td>
+                            {{ sale.quantity }}
+                        </td>
+
+
+                        <td>
+                            UGX {{ sale.total_price }}
+                        </td>
+
+
+                        <td>
+                            {{ sale.sale_date|date:"d/m/Y H:i" }}
+                        </td>
+
+
+                    </tr>
+
+
+
+                {% empty %}
+
+
+                    <tr>
+
+                        <td colspan="6"
+                        class="text-center">
+
+                            No sales found
+
+                        </td>
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- LOW STOCK -->
+
+
+    <div class="card shadow">
+
+
+        <div class="card-header bg-warning">
+
+            ⚠ Low Stock Products
+
+        </div>
+
+
+
+        <div class="card-body">
+
+
+            <table class="table table-bordered">
+
 
                 <tr>
 
-                    <th>Receipt</th>
+                    <th>
+                        Product
+                    </th>
 
-                    <th>Customer</th>
+                    <th>
+                        Quantity
+                    </th>
 
-                    <th>Product</th>
-
-                    <th>Quantity</th>
-
-                    <th>Total</th>
-
-                    <th>Date</th>
 
                 </tr>
 
-            </thead>
 
-            <tbody>
 
-            {% for sale in sales %}
+                {% for product in low_stock %}
+
 
                 <tr>
-
-                    <td>{{ sale.id }}</td>
 
                     <td>
-                        {% if sale.customer %}
-                            {{ sale.customer.full_name }}
-                        {% else %}
-                            Walk-in Customer
-                        {% endif %}
+                        {{ product.product_name }}
                     </td>
 
-                    <td>{{ sale.product.product_name }}</td>
 
-                    <td>{{ sale.quantity }}</td>
+                    <td>
+                        {{ product.quantity }}
+                    </td>
 
-                    <td>UGX {{ sale.total_price }}</td>
-
-                    <td>{{ sale.sale_date|date:"d/m/Y H:i" }}</td>
 
                 </tr>
 
-            {% empty %}
+
+
+                {% empty %}
+
 
                 <tr>
 
-                    <td colspan="6" class="text-center">
+                    <td colspan="2"
+                    class="text-center">
 
-                        No sales found.
+                        No low stock products
 
                     </td>
 
                 </tr>
 
-            {% endfor %}
 
-            </tbody>
+                {% endfor %}
 
-        </table>
+
+
+            </table>
+
+
+        </div>
+
 
     </div>
+
+
 
 </div>
 
 
-<!-- Low Stock -->
+{% endblock %}
 
-<div class="card shadow">
 
-    <div class="card-header bg-warning">
 
-        ⚠ Low Stock Products
 
-    </div>
 
-    <div class="card-body">
 
-        <table class="table table-bordered">
 
-            <thead>
+{% block extra_js %}
 
-                <tr>
 
-                    <th>Product</th>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                    <th>Remaining Quantity</th>
 
-                </tr>
 
-            </thead>
+<script>
 
-            <tbody>
 
-            {% for product in low_stock %}
+// BAR CHART
 
-                <tr>
 
-                    <td>{{ product.product_name }}</td>
+new Chart(
+document.getElementById("salesChart"),
+{
 
-                    <td>{{ product.quantity }}</td>
 
-                </tr>
+type:"bar",
 
-            {% empty %}
 
-                <tr>
+data:{
 
-                    <td colspan="2" class="text-center">
 
-                        No low stock products.
+labels: JSON.parse('{{ chart_labels|escapejs }}'),
 
-                    </td>
 
-                </tr>
+datasets:[{
 
-            {% endfor %}
+label:"Units Sold",
 
-            </tbody>
+data: JSON.parse('{{ chart_values|escapejs }}'),
 
-        </table>
+backgroundColor:"#0d6efd"
 
-    </div>
 
-</div>
+}]
+
+
+},
+
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false
+
+
+}
+
+
+});
+
+
+
+
+
+
+
+// MONTHLY REVENUE
+
+
+new Chart(
+document.getElementById("monthlyChart"),
+{
+
+
+type:"line",
+
+
+data:{
+
+
+labels: JSON.parse('{{ month_labels|escapejs }}'),
+
+
+datasets:[{
+
+
+label:"Revenue UGX",
+
+data: JSON.parse('{{ month_values|escapejs }}'),
+
+
+borderColor:"#198754",
+
+backgroundColor:"rgba(25,135,84,0.2)",
+
+fill:true,
+
+tension:0.4
+
+
+}]
+
+
+},
+
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false
+
+
+}
+
+
+});
+
+
+
+
+
+
+
+
+// PIE CHART
+
+
+new Chart(
+document.getElementById("pieChart"),
+{
+
+
+type:"pie",
+
+
+data:{
+
+
+labels: JSON.parse('{{ pie_labels|escapejs }}'),
+
+
+datasets:[{
+
+
+data: JSON.parse('{{ pie_values|escapejs }}'),
+
+
+backgroundColor:[
+
+"#0d6efd",
+"#198754",
+"#ffc107",
+"#dc3545",
+"#6610f2",
+"#20c997"
+
+]
+
+
+}]
+
+
+},
+
+
+options:{
+
+
+responsive:true,
+
+maintainAspectRatio:false,
+
+
+plugins:{
+
+
+legend:{
+
+
+position:"bottom"
+
+
+}
+
+
+}
+
+
+
+}
+
+
+});
+
+
+</script>
+
+
 
 {% endblock %}

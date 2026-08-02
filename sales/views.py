@@ -10,7 +10,8 @@ from reportlab.lib.styles import getSampleStyleSheet
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from datetime import datetime
-
+import json
+from django.db.models.functions import TruncMonth
 def sales_page(request):
 
     products = Product.objects.all()
@@ -122,7 +123,6 @@ def sales_history(request):
     )
 
 def receipt(request, sale_id):
-
     sale = get_object_or_404(Sale, id=sale_id)
 
     return render(
@@ -136,51 +136,178 @@ def receipt(request, sale_id):
 
 def reports(request):
 
-    sales = Sale.objects.all().order_by("-sale_date")
+    sales = Sale.objects.select_related(
+        "product",
+        "customer"
+    ).order_by("-sale_date")
+
+
+    # Date filter
 
     from_date = request.GET.get("from_date")
     to_date = request.GET.get("to_date")
 
+
     if from_date:
-        sales = sales.filter(sale_date__date__gte=from_date)
+        sales = sales.filter(
+            sale_date__date__gte=from_date
+        )
+
 
     if to_date:
-        sales = sales.filter(sale_date__date__lte=to_date)
+        sales = sales.filter(
+            sale_date__date__lte=to_date
+        )
 
-    total_sales = sales.count()
 
-    total_revenue = (
-        sales.aggregate(
-            Sum("total_price")
-        )["total_price__sum"] or 0
-    )
-    total_profit = (
-        sales.aggregate(
-        Sum("profit")
-       )["profit__sum"] or 0
-    )
+    # Statistics
 
     total_products = Product.objects.count()
 
     total_customers = Customer.objects.count()
 
-    low_stock = Product.objects.filter(quantity__lt=5)
+    total_sales = sales.count()
+
+
+    total_revenue = (
+        sales.aggregate(
+            revenue=Sum("total_price")
+        )["revenue"] or 0
+    )
+
+
+    total_profit = (
+        sales.aggregate(
+            profit=Sum("profit")
+        )["profit"] or 0
+    )
+
+
+    low_stock = Product.objects.filter(
+        quantity__lt=5
+    )
+
+
+    # -------------------------
+    # Product Chart
+    # -------------------------
+
+    chart_labels = []
+    chart_values = []
+
+
+    product_sales = (
+        sales.values(
+            "product__product_name"
+        )
+        .annotate(
+            total_qty=Sum("quantity")
+        )
+    )
+
+
+    for item in product_sales:
+
+        chart_labels.append(
+            item["product__product_name"]
+        )
+
+        chart_values.append(
+            item["total_qty"]
+        )
+
+
+    # Pie chart data
+
+    pie_labels = chart_labels
+
+    pie_values = chart_values
+
+
+
+    # -------------------------
+    # Monthly Revenue
+    # -------------------------
+
+    month_labels = []
+    month_values = []
+
+
+    monthly = (
+        sales.annotate(
+            month=TruncMonth("sale_date")
+        )
+        .values("month")
+        .annotate(
+            revenue=Sum("total_price")
+        )
+        .order_by("month")
+    )
+
+
+    for item in monthly:
+
+        if item["month"]:
+
+            month_labels.append(
+                item["month"].strftime("%b %Y")
+            )
+
+
+            month_values.append(
+                float(item["revenue"])
+            )
+
+
+
+    context = {
+
+
+        "sales": sales,
+
+
+        "from_date": from_date,
+
+        "to_date": to_date,
+
+
+        "total_products": total_products,
+
+        "total_customers": total_customers,
+
+        "total_sales": total_sales,
+
+        "total_revenue": total_revenue,
+
+        "total_profit": total_profit,
+
+
+        "low_stock": low_stock,
+
+
+        "chart_labels": json.dumps(chart_labels),
+
+        "chart_values": json.dumps(chart_values),
+
+
+
+        "pie_labels": json.dumps(pie_labels),
+
+        "pie_values": json.dumps(pie_values),
+
+
+
+        "month_labels": json.dumps(month_labels),
+
+        "month_values": json.dumps(month_values),
+
+    }
+
 
     return render(
         request,
         "reports.html",
-        {
-            "sales": sales,
-            "from_date": from_date,
-            "to_date": to_date,
-
-            "total_sales": total_sales,
-            "total_revenue": total_revenue,
-            "total_products": total_products,
-            "total_customers": total_customers,
-            "low_stock": low_stock,
-            "total_profit": total_profit,
-        }
+        context
     )
 def sales_excel(request):
 
@@ -381,8 +508,8 @@ def sales_pdf(request):
         total_revenue += sale.total_price
 
     data.append(
-        ["", "", "", "Total Revenue", f"UGX {total_revenue}", ""]
-    )
+    ["", "", "", "Total Revenue", f"UGX {total_revenue}", "", ""]
+   )
 
     table = Table(data)
 

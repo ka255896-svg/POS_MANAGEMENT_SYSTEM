@@ -33,6 +33,6 @@ urlpatterns = [
    path(
     "sales/excel/",
     views.sales_excel,
-    name="sales_excel",
+    name="sales_excel"
    ),
 ]
