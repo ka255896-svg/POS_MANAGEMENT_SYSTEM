@@ -1,3 +1,6 @@
+from pathlib import Path
+import os
+import dj_database_url
 """
 Django settings for config project.
 
@@ -10,7 +13,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,11 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=z9l#t63-vs1t8knoti9#&jmmrt!^=gfeods2p1&**qk1=e6+x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    ".onrender.com"
 ]
 
 # Application definition
@@ -86,11 +89,20 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "pos_management_system",
         "USER": "root",
-        "PASSWORD":"1234",
+        "PASSWORD": "1234",
         "HOST": "127.0.0.1",
         "PORT": "3306",
     }
 }
+
+
+# Render PostgreSQL database
+if os.environ.get("DATABASE_URL"):
+
+    DATABASES["default"] = dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600
+    )
 
 
 # Password validation
