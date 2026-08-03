@@ -22,7 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=z9l#t63-vs1t8knoti9#&jmmrt!^=gfeods2p1&**qk1=e6+x'
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-development-key"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "True") == "True"
@@ -82,27 +85,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-import os
+
+
+# Database
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "pos_management_system",
-        "USER": "root",
-        "PASSWORD": "1234",
-        "HOST": "127.0.0.1",
-        "PORT": "3306",
-    }
-}
-
-
-# Render PostgreSQL database
-if os.environ.get("DATABASE_URL"):
-
-    DATABASES["default"] = dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
+    "default": dj_database_url.config(
+        default="mysql://root:1234@127.0.0.1:3306/pos_management_system",
         conn_max_age=600
     )
+}
 
 
 # Password validation
